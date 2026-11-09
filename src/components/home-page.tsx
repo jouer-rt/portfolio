@@ -5,7 +5,7 @@ import { ServicesSection } from "./services-section";
 import { TrackedMailLink } from "./tracked-mail-link";
 import { homeDictionaries, paths, type Locale } from "@/i18n/dictionaries";
 
-const GITHUB_URL = "https://github.com/ryota-taya-jouer";
+const GITHUB_URL = "https://github.com/jouer-rt";
 const EMAIL = "ryota.taya@jouerworld.com";
 
 function Tag({ children }: { children: React.ReactNode }) {
@@ -206,7 +206,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 rel="noopener noreferrer"
                 className="text-accent hover:underline"
               >
-                github.com/ryota-taya-jouer
+                github.com/jouer-rt
               </a>
             </li>
             <li>

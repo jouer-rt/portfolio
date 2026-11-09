@@ -6,7 +6,7 @@ Last updated: August 14, 2026
 | --- | --- |
 | Name | Ryota Taya (田矢 凌太) |
 | Current status | Currently employed |
-| GitHub | https://github.com/ryota-taya-jouer |
+| GitHub | https://github.com/jouer-rt |
 
 ---
 

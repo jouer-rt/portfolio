@@ -6,7 +6,7 @@
 | --- | --- |
 | 氏名 | 田矢 凌太（Ryota Taya） |
 | 現在の状況 | 在職中 |
-| GitHub | https://github.com/ryota-taya-jouer |
+| GitHub | https://github.com/jouer-rt |
 
 ---
 
