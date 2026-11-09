@@ -10,7 +10,7 @@ This policy explains how Ryota Taya ("I", "me") handles information about visito
 
 This site uses Google Analytics, a web analytics service provided by Google LLC, to understand how the site is used and to improve it.
 
-Google Analytics uses cookies to collect information such as the pages you view, time spent on the site, referring sites, approximate location, and browser and device type. This site also records when the inquiry email links or the copy-address button are clicked. This information does not include anything that directly identifies you, such as your name or email address.
+Google Analytics uses cookies to collect information such as the pages you view, time spent on the site, referring sites, approximate location, and browser and device type. This site also records when the inquiry email links or the copy-address button are clicked. This information does not include anything that directly identifies you, such as your name or email address. For visitors from the European Economic Area (EEA), the United Kingdom, and Switzerland, Google Analytics is configured not to use cookies.
 
 The collected information is managed under Google's privacy policy. For details on how Google handles this data, see [How Google uses information from sites or apps that use our services](https://policies.google.com/technologies/partner-sites).
 

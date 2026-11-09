@@ -43,7 +43,7 @@ npm run og      # 共有画像の文言を変えたら: public/og.png・og-en.pn
 
 | 変数 | 用途 |
 | --- | --- |
-| `NEXT_PUBLIC_GA_ID` | Google Analytics 4 の測定 ID。未設定ならアクセス解析を読み込まない |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics 4 の測定 ID。未設定ならアクセス解析を読み込まない。Consent Mode の既定値（EEA・英国・スイスは解析 Cookie を使わない）は `src/components/analytics.tsx` |
 
 ## セキュリティ・配信設定
 
