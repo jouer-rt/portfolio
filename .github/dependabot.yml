@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # 公開直後のパッケージ（乗っ取り・誤公開の版）を避けるため 14 日待つ。脆弱性修正の PR は待たずに作られる
+    cooldown:
+      default-days: 14
+    groups:
+      # next と eslint-config-next などは同じ版にそろえる必要があるため、マイナー・パッチはまとめる
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # @types/node のメジャーは使用中の Node のメジャーに合わせて手動で上げる
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
