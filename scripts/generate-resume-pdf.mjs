@@ -1,15 +1,14 @@
 // out/ の職務経歴書ページ（日英）をヘッドレス Chrome で PDF 化して public/ に出力する。
 // 使い方: npm run pdf（next build → PDF 生成の順に実行される）
 // resume.md / resume.en.md を更新したら再実行して public/ の PDF をコミットし直すこと。
-import { createServer } from "node:http";
-import { copyFile, mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { copyFile, mkdtemp, rm, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { CHROME, assertChromeExists } from "./lib/chrome.mjs";
+import { startStaticServer } from "./lib/static-server.mjs";
 
-const CHROME =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const root = path.join(process.cwd(), "out");
 
 // route: out/ 内のページ、pdf: public/ に出力するファイル名
@@ -24,46 +23,9 @@ for (const { html } of TARGETS) {
     process.exit(1);
   }
 }
-if (!existsSync(CHROME)) {
-  console.error(`Google Chrome が見つかりません: ${CHROME}`);
-  process.exit(1);
-}
+assertChromeExists();
 
-const MIME = {
-  ".html": "text/html",
-  ".css": "text/css",
-  ".js": "text/javascript",
-  ".svg": "image/svg+xml",
-  ".png": "image/png",
-  ".ico": "image/x-icon",
-  ".txt": "text/plain",
-  ".woff2": "font/woff2",
-  ".json": "application/json",
-};
-
-// out/ を配信する最小限のサーバー（/resume → resume.html の解決のみ対応）
-const server = createServer(async (req, res) => {
-  const pathname = decodeURIComponent(
-    new URL(req.url, "http://localhost").pathname,
-  );
-  let file = path.join(root, pathname);
-  if (pathname.endsWith("/")) file = path.join(file, "index.html");
-  else if (!path.extname(file) && existsSync(`${file}.html`))
-    file = `${file}.html`;
-  try {
-    const body = await readFile(file);
-    res.setHeader(
-      "content-type",
-      MIME[path.extname(file)] ?? "application/octet-stream",
-    );
-    res.end(body);
-  } catch {
-    res.statusCode = 404;
-    res.end("not found");
-  }
-});
-await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-const port = server.address().port;
+const { server, port } = await startStaticServer(root);
 
 async function generatePdf(route, pdfPath) {
   // 旧 PDF が残っていると下の「サイズ安定 = 完了」判定が誤爆するため必ず消してから生成する
