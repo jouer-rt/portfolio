@@ -2,11 +2,14 @@ import { BlockLogo } from "./block-logo";
 import { LocaleSwitch } from "./locale-switch";
 import { SectionHeading } from "./section-heading";
 import { ServicesSection } from "./services-section";
+import { SiteFooter } from "./site-footer";
 import { TrackedMailLink } from "./tracked-mail-link";
 import { homeDictionaries, paths, type Locale } from "@/i18n/dictionaries";
+import { EMAIL, GITHUB_URL, displayUrl } from "@/lib/site";
 
-const GITHUB_URL = "https://github.com/jouer-rt";
-const EMAIL = "ryota.taya@jouerworld.com";
+/** ヒーロー欄の枠線ボタン（職務経歴書・GitHub） */
+const outlineButtonClass =
+  "border-2 border-navy px-5 py-2.5 text-sm font-medium text-navy hover:border-accent hover:text-accent dark:border-line dark:text-foreground dark:hover:border-accent dark:hover:text-accent";
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
@@ -67,17 +70,14 @@ export function HomePage({ locale }: { locale: Locale }) {
               >
                 {dict.hero.servicesCta}
               </a>
-              <a
-                href={resumeUrl}
-                className="border-2 border-navy px-5 py-2.5 text-sm font-medium text-navy hover:border-accent hover:text-accent dark:border-line dark:text-foreground dark:hover:border-accent dark:hover:text-accent"
-              >
+              <a href={resumeUrl} className={outlineButtonClass}>
                 {dict.hero.resumeCta}
               </a>
               <a
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-navy px-5 py-2.5 text-sm font-medium text-navy hover:border-accent hover:text-accent dark:border-line dark:text-foreground dark:hover:border-accent dark:hover:text-accent"
+                className={outlineButtonClass}
               >
                 GitHub
               </a>
@@ -133,7 +133,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                     rel="noopener noreferrer"
                     className="mt-4 inline-block text-sm font-medium text-accent hover:underline"
                   >
-                    {work.url.replace(/^https?:\/\//, "").replace(/\/$/, "")} ↗
+                    {displayUrl(work.url)} ↗
                   </a>
                 )}
                 {work.demo && (
@@ -206,7 +206,7 @@ export function HomePage({ locale }: { locale: Locale }) {
                 rel="noopener noreferrer"
                 className="text-accent hover:underline"
               >
-                github.com/jouer-rt
+                {displayUrl(GITHUB_URL)}
               </a>
             </li>
             <li>
@@ -221,9 +221,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         </section>
       </main>
 
-      <footer className="border-t border-line py-8 text-center text-sm text-muted">
-        © 2026 Ryota Taya
-      </footer>
+      <SiteFooter locale={locale} />
     </div>
   );
 }

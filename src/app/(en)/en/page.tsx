@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/home-page";
+import { localeAlternates } from "@/i18n/metadata";
 
 export const metadata: Metadata = {
-  alternates: {
-    canonical: "/en",
-    languages: { ja: "/", en: "/en", "x-default": "/" },
-  },
+  alternates: localeAlternates("en", "home"),
 };
 
 export default function EnHome() {

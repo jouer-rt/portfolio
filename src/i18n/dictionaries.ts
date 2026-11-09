@@ -11,13 +11,54 @@ export const localeNames: Record<Locale, string> = {
   en: "English",
 };
 
+export type Page = "home" | "resume" | "privacy";
+
 /** ロケールごとのルーティング。日本語は既存 URL を維持し、英語は /en 配下 */
-export const paths: Record<
+export const paths: Record<Locale, Record<Page, string>> = {
+  ja: { home: "/", resume: "/resume", privacy: "/privacy" },
+  en: { home: "/en", resume: "/en/resume", privacy: "/en/privacy" },
+};
+
+/** ルートレイアウトの metadata（タイトル・説明文・SNS 共有画像）に使う文言 */
+export type SiteMetaDictionary = {
+  title: string;
+  description: string;
+  /** Open Graph の locale（ja_JP / en_US） */
+  ogLocale: string;
+  /** SNS 共有用の画像（npm run og で public/ に生成） */
+  ogImage: { url: string; alt: string };
+};
+
+export const siteMetaDictionaries: Record<Locale, SiteMetaDictionary> = {
+  ja: {
+    title: "Ryota Taya | Portfolio",
+    description:
+      "田矢 凌太（Ryota Taya）のポートフォリオ。Python／Django を中心とした Web バックエンド開発、AWS、Stripe 決済を得意とするエンジニアです。Stripe 決済の導入・不具合調査や Django／AWS の保守などのご依頼を、副業として受け付けています。",
+    ogLocale: "ja_JP",
+    ogImage: {
+      url: "/og.png",
+      alt: "田矢 凌太（Ryota Taya）— お仕事のご依頼を受け付けています",
+    },
+  },
+  en: {
+    title: "Ryota Taya | Portfolio",
+    description:
+      "Portfolio of Ryota Taya, a web engineer specializing in Python/Django backends, AWS infrastructure, and Stripe payments. Available for freelance work, including Stripe integration and troubleshooting and Django/AWS maintenance.",
+    ogLocale: "en_US",
+    ogImage: {
+      url: "/og-en.png",
+      alt: "Ryota Taya — Available for freelance work",
+    },
+  },
+};
+
+/** 複数のページで共有する文言 */
+export const commonDictionaries: Record<
   Locale,
-  { home: string; resume: string; resumePdf: string }
+  { backLink: string; privacyLink: string }
 > = {
-  ja: { home: "/", resume: "/resume", resumePdf: "/resume.pdf" },
-  en: { home: "/en", resume: "/en/resume", resumePdf: "/resume-en.pdf" },
+  ja: { backLink: "← ポートフォリオへ戻る", privacyLink: "プライバシーポリシー" },
+  en: { backLink: "← Back to portfolio", privacyLink: "Privacy Policy" },
 };
 
 export type WorkEntry = {
@@ -117,10 +158,41 @@ export type HomeDictionary = {
 
 export type ResumeDictionary = {
   pdfLink: string;
+  /** PDF の配信パス（npm run pdf で public/ に生成） */
+  pdfPath: string;
   pdfDownloadName: string;
-  backLink: string;
   /** レンダリングする Markdown ファイル（src/content/ 配下） */
   sourceFile: string;
+};
+
+/*
+ * 言語に依存しない作品データ（URL・技術タグ・デモアカウント・動画）。
+ * 日英の entries から展開して使うので、変更はここだけで両言語に反映される。
+ */
+const SOLOOPS = {
+  url: "https://solops.jouerworld.com/",
+  tags: [
+    "Django REST Framework",
+    "Next.js",
+    "TypeScript",
+    "PostgreSQL",
+    "AWS Lambda",
+    "Aurora Serverless v2",
+    "CloudFront",
+    "Terraform",
+    "Playwright",
+  ],
+  videoSrc: "/videos/soloops-demo.mp4",
+};
+
+const SOLOOPS_DEMO_ACCOUNT = {
+  email: "demo@soloops.example.com",
+  password: "DemoPassw0rd!",
+};
+
+const OSHIBELL = {
+  url: "https://oshibell.jouerworld.com/",
+  tags: ["Swift", "SwiftUI", "SwiftData", "WidgetKit", "Firebase Analytics / Crashlytics"],
 };
 
 export const homeDictionaries: Record<Locale, HomeDictionary> = {
@@ -169,42 +241,22 @@ export const homeDictionaries: Record<Locale, HomeDictionary> = {
       },
       entries: [
         {
+          ...SOLOOPS,
           title: "SoloOps",
           subtitle: "個人事業者向け 案件・請求管理 Web サービス（公開デモ）",
-          url: "https://solops.jouerworld.com/",
           description:
             "副業・フリーランスのクライアント、案件、稼働時間、請求書、入金を一元管理する Web サービス。要件定義から実装、AWS サーバーレス構成の構築・運用まで、全工程を個人で担当しています。",
-          tags: [
-            "Django REST Framework",
-            "Next.js",
-            "TypeScript",
-            "PostgreSQL",
-            "AWS Lambda",
-            "Aurora Serverless v2",
-            "CloudFront",
-            "Terraform",
-            "Playwright",
-          ],
           demo: {
-            email: "demo@soloops.example.com",
-            password: "DemoPassw0rd!",
+            ...SOLOOPS_DEMO_ACCOUNT,
             note: "サンプルデータ入りのデモアカウントです。コスト最適化のためサーバーを自動停止しており、初回アクセスには 15 秒ほどかかります。",
           },
-          videoSrc: "/videos/soloops-demo.mp4",
         },
         {
+          ...OSHIBELL,
           title: "推しベル",
           subtitle: "カウントダウン iOS アプリ（開発中）",
-          url: "https://oshibell.jouerworld.com/",
           description:
             "VTuber・歌い手・配信者ファン向けのカウントダウン iOS アプリ。バックエンドを持たない MVP として、UI 実装からデータ管理、ローカル通知、ウィジェット、SNS 共有画像生成までを個人で設計・実装しています。",
-          tags: [
-            "Swift",
-            "SwiftUI",
-            "SwiftData",
-            "WidgetKit",
-            "Firebase Analytics / Crashlytics",
-          ],
         },
       ],
     },
@@ -360,43 +412,23 @@ export const homeDictionaries: Record<Locale, HomeDictionary> = {
       },
       entries: [
         {
+          ...SOLOOPS,
           title: "SoloOps",
           subtitle:
             "Project & invoicing management web service for solo businesses (public demo)",
-          url: "https://solops.jouerworld.com/",
           description:
             "A web service that centralizes clients, projects, tracked hours, invoices, and payments for freelancers and side businesses. I handle every stage on my own, from requirements definition through implementation to building and operating the AWS serverless infrastructure.",
-          tags: [
-            "Django REST Framework",
-            "Next.js",
-            "TypeScript",
-            "PostgreSQL",
-            "AWS Lambda",
-            "Aurora Serverless v2",
-            "CloudFront",
-            "Terraform",
-            "Playwright",
-          ],
           demo: {
-            email: "demo@soloops.example.com",
-            password: "DemoPassw0rd!",
+            ...SOLOOPS_DEMO_ACCOUNT,
             note: "A demo account preloaded with sample data. The server is stopped automatically to optimize costs, so the first access takes about 15 seconds.",
           },
-          videoSrc: "/videos/soloops-demo.mp4",
         },
         {
+          ...OSHIBELL,
           title: "Oshibell",
           subtitle: "Countdown iOS app (in development)",
-          url: "https://oshibell.jouerworld.com/",
           description:
             "A countdown iOS app for fans of VTubers, cover singers, and streamers. Built as a backend-less MVP; I design and implement everything on my own, from the UI and data management to local notifications, widgets, and social-share image generation.",
-          tags: [
-            "Swift",
-            "SwiftUI",
-            "SwiftData",
-            "WidgetKit",
-            "Firebase Analytics / Crashlytics",
-          ],
         },
       ],
     },
@@ -515,14 +547,14 @@ export const homeDictionaries: Record<Locale, HomeDictionary> = {
 export const resumeDictionaries: Record<Locale, ResumeDictionary> = {
   ja: {
     pdfLink: "PDF をダウンロード",
+    pdfPath: "/resume.pdf",
     pdfDownloadName: "職務経歴書_田矢凌太.pdf",
-    backLink: "← ポートフォリオへ戻る",
     sourceFile: "resume.md",
   },
   en: {
     pdfLink: "Download PDF",
+    pdfPath: "/resume-en.pdf",
     pdfDownloadName: "Resume_Ryota_Taya.pdf",
-    backLink: "← Back to portfolio",
     sourceFile: "resume.en.md",
   },
 };
