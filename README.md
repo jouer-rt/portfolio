@@ -48,5 +48,5 @@ npm run og      # 共有画像の文言を変えたら: public/og.png・og-en.pn
 ## セキュリティ・配信設定
 
 - 静的エクスポートでは `next.config` の `headers()` が使えないため、レスポンスヘッダーは `vercel.json` で付けています（`X-Frame-Options` などのセキュリティヘッダーと、職務経歴書の PDF・RSC ペイロードを検索から外す `X-Robots-Tag`）。
-- CSP は、ページを壊さない項目（`frame-ancestors` など）だけを強制しています。スクリプトの読み込み元を含む全体のポリシーは `Content-Security-Policy-Report-Only` で入れているので、ブラウザのコンソールに違反が出ていないか確認してから強制に切り替えてください。
+- CSP はスクリプト・通信先を Google Analytics と自サイトに限定しています。Next.js と GA の初期化がインラインスクリプトのため `script-src` に `'unsafe-inline'` が必要です。外部のスクリプトや埋め込みを追加するときは `vercel.json` の CSP に読み込み元を足してください（足さないと本番でブロックされます）。プレビュー環境の Vercel Toolbar（`vercel.live`）も許可していないため、プレビューでは表示されません。
 - GitHub Actions（`.github/workflows/ci.yml`）が PR ごとに lint とビルドを実行し、Dependabot が依存パッケージを週次で更新します。
